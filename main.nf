@@ -192,12 +192,12 @@ process preprocess_reads {
         tuple val(meta), path('seqs.fastq.gz')
     output:
         tuple val("${meta.alias}"),
-              path("${meta.alias}_full_length_reads.fastq"),
+              path("${meta.alias}_pychopper_output/${meta.alias}_full_length_reads.fastq"),
               emit: full_len_reads
         tuple val("${meta.alias}"),
               path("${meta.alias}_pychopper_output/"),
               emit: pychopper_output
-        path("pychopper.tsv"),
+        path("${meta.alias}_pychopper_output/pychopper.tsv"),
               emit: report
     script:
         def cdna_kit = params.cdna_kit.split("-")[-1]
