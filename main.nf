@@ -432,7 +432,7 @@ process makeReport {
     label "wf_common"
     cpus 2
     memory "4 GB"
-    publishDir "${params.out_dir}", mode: 'copy', pattern: "wf-transcriptomes-report.html"
+    publishDir "${params.out_dir}", mode: 'copy', pattern: "wf-transcriptomes-report.html", overwrite: true
     input:
         val metadata
         path stats, stageAs: "stats_*"
@@ -528,7 +528,8 @@ process publish_results {
     publishDir (
         params.out_dir,
         mode: "copy",
-        saveAs: { dirname ? "$dirname/$fname" : fname }
+        saveAs: { dirname ? "$dirname/$fname" : fname },
+        overwrite: true
     )
     input:
         tuple path(fname), val(dirname)
@@ -582,7 +583,7 @@ process faidx {
     // IGV configuration, but only by internal processes together with the decompressed
     // FASTA file. To avoid unnecessary emissions, we enable only if the input file is
     // decompressed.
-    publishDir "${params.out_dir}/igv_reference", mode: 'copy', pattern: "*", enabled: !params.ref_genome.toLowerCase().endsWith("gz")
+    publishDir "${params.out_dir}/igv_reference", mode: 'copy', pattern: "*", enabled: !params.ref_genome.toLowerCase().endsWith("gz"), overwrite: true
     label "wf_common"
     cpus 1
     memory 4.GB
@@ -599,7 +600,7 @@ process faidx {
 
 // Process to create the faidx indexes for a gzipped reference
 process gz_faidx {
-    publishDir "${params.out_dir}/igv_reference", mode: 'copy', pattern: "*"
+    publishDir "${params.out_dir}/igv_reference", mode: 'copy', pattern: "*", overwrite: true
     label "wf_common"
     cpus 1
     memory 4.GB
