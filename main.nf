@@ -192,12 +192,12 @@ process preprocess_reads {
         tuple val(meta), path('seqs.fastq.gz')
     output:
         tuple val("${meta.alias}"),
-              path("${meta.alias}_pychopper_output/${meta.alias}_full_length_reads.fastq"),
+              path("${meta.alias}_full_length_reads.fastq"),
               emit: full_len_reads
         tuple val("${meta.alias}"),
               path("${meta.alias}_pychopper_output/"),
               emit: pychopper_output
-        path("${meta.alias}_pychopper_output/pychopper.tsv"),
+        path("pychopper.tsv"),
               emit: report
     script:
         def cdna_kit = params.cdna_kit.split("-")[-1]
@@ -208,12 +208,12 @@ process preprocess_reads {
 
         # Add sample id column
         sed "1s/\$/\tsample_id/; 1 ! s/\$/\t${meta.alias}/" pychopper.tsv > tmp
-        mv tmp pychopper.tsv
+        cp tmp pychopper.tsv
 
 
         mkdir "${meta.alias}_pychopper_output/"
-        cp pychopper* "${meta.alias}_pychopper_output/"
-        cp ${meta.alias}_full_length_reads.fastq "${meta.alias}_pychopper_output/"
+        shopt -s extglob  # Allow extended pattern matching so we can exclude files from the mv
+        cp !("${meta.alias}_pychopper_output"|seqs.fastq.gz) "${meta.alias}_pychopper_output/"
         """
 }
 
