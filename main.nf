@@ -208,7 +208,7 @@ process preprocess_reads {
 
         # Add sample id column
         sed "1s/\$/\tsample_id/; 1 ! s/\$/\t${meta.alias}/" pychopper.tsv > tmp
-        cp tmp pychopper.tsv
+        mv tmp pychopper.tsv
 
 
         mkdir "${meta.alias}_pychopper_output/"
@@ -352,6 +352,8 @@ process run_gffcompare{
     label 'isoforms'
     cpus 1
     memory "2 GB"
+    publishDir path: "${params.out_dir}", mode: 'copy', pattern: "${sample_id}", overwrite: true, saveAs: { "${sample_id}_gffcompare" }
+    publishDir path: "${params.out_dir}", mode: 'copy', pattern: '*_transcripts_table.tsv', overwrite: true
     input:
        tuple val(sample_id), path(query_annotation)
        path ref_annotation
