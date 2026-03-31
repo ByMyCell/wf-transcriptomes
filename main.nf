@@ -1020,7 +1020,7 @@ workflow {
     }
 
     pipeline(samples, ref_genome, ref_annotation, ref_transcriptome, use_ref_ann)
-    publish_results(pipeline.out.results)
+    // publish_results(pipeline.out.results)
 }
 
 workflow.onComplete {
