@@ -192,12 +192,12 @@ process preprocess_reads {
         tuple val(meta), path('seqs.fastq.gz')
     output:
         tuple val("${meta.alias}"),
-              path("${meta.alias}_pychopper_output/${meta.alias}_full_length_reads.fastq"),
+              path("${meta.alias}_full_length_reads.fastq"),
               emit: full_len_reads
         tuple val("${meta.alias}"),
               path("${meta.alias}_pychopper_output/"),
               emit: pychopper_output
-        path("${meta.alias}_pychopper_output/pychopper.tsv"),
+        path("pychopper.tsv"),
               emit: report
     script:
         def cdna_kit = params.cdna_kit.split("-")[-1]
@@ -213,7 +213,7 @@ process preprocess_reads {
 
         mkdir "${meta.alias}_pychopper_output/"
         shopt -s extglob  # Allow extended pattern matching so we can exclude files from the mv
-        mv !("${meta.alias}_pychopper_output"|seqs.fastq.gz) "${meta.alias}_pychopper_output/"
+        cp !("${meta.alias}_pychopper_output"|seqs.fastq.gz) "${meta.alias}_pychopper_output/"
         """
 }
 
@@ -352,6 +352,8 @@ process run_gffcompare{
     label 'isoforms'
     cpus 1
     memory "2 GB"
+    publishDir path: "${params.out_dir}", mode: 'copy', pattern: "${sample_id}", overwrite: true, saveAs: { "${sample_id}_gffcompare" }
+    publishDir path: "${params.out_dir}", mode: 'copy', pattern: '*_transcripts_table.tsv', overwrite: true
     input:
        tuple val(sample_id), path(query_annotation)
        path ref_annotation
@@ -1020,7 +1022,7 @@ workflow {
     }
 
     pipeline(samples, ref_genome, ref_annotation, ref_transcriptome, use_ref_ann)
-    publish_results(pipeline.out.results)
+    // publish_results(pipeline.out.results)
 }
 
 workflow.onComplete {
