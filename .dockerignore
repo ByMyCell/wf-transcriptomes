@@ -1,13 +1,40 @@
+# Git
 .git
-bin
-CHANGELOG.md
-data
-lib
-LICENSE
-main.nf
-nextflow.config
+.gitignore
+.gitmodules
+.gitlab-ci.yml
+.github/
+
+# Testes e avaliacao
+test_data/
+evaluation/
+
+# Dev tooling
+.pre-commit-config.yaml
+.vscode/
+.idea/
+
+# Python cache e artefatos
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.eggs/
+dist/
+build/
+*.egg
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+.nox/
+.mypy_cache/
+.hypothesis/
+
+# Documentacao e metadados
 README.md
-test_data
-# we typically run tests with outputs to these:
-output
-work
+CHANGELOG.md
+LICENSE
+docs/
+output_definition.json
